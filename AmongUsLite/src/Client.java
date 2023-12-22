@@ -90,6 +90,7 @@ public class Client extends Application {
 
         // Start a thread to continuously receive updates from the server
         new Thread(() -> receiveUpdatesFromServer(player.getCharacterDisplay(), root)).start();
+        player.requestFocus();
     }
 
     private void handleKeyPress(KeyCode keyCode, ImageView imageView, String nameOfFile) {
@@ -217,7 +218,12 @@ public class Client extends Application {
             // Checks if another user is dead, if so it checks if there is a dead body for the given user, if not creates one
             if (otherIsDead) {
                 if (!deadBodies.containsKey(clientID)) {
-                    DeadBody deadBody = new DeadBody(otherX, otherY);
+                    if (player.getId() == clientID) {
+                        movement.stopMovement();
+                    }
+                    deadBodyX = otherX;
+                    deadBodyY = otherY;
+                    DeadBody deadBody = new DeadBody(deadBodyX, deadBodyY);
                     deadBodies.put(clientID, deadBody);
                 }
 
@@ -253,15 +259,29 @@ public class Client extends Application {
             imageView.setTranslateY(movement.getY());
             player.updatePlayerPosition();
 
-            if(playerType.equals("CREWMATE") && !isDead){
+            /*if(playerType.equals("CREWMATE") && !isDead) {
                 System.out.println("HereUpdate");
                 System.out.println();
+                System.out.println("xPosition = " + xPosition + " yPosition = " + yPosition);
                 if(player.ableToKill(xPosition, yPosition)) {
                     fileName = "Characters/DeadBody.png";
                     isDead = true;
                     System.out.println("DEATH HERE (" + otherX + ", " + otherY + ")");
                     sendDeathToServer(fileName, clientID, otherX, otherY);
                 }
+            }*/
+
+            if(playerType.equals("IMPOSTOR") && !isDead) {
+                System.out.println();
+                System.out.println("isDead check");
+                System.out.println("xPosition = " + xPosition + " yPosition = " + yPosition);
+                if(player.ableToKill(xPosition, yPosition) && movement.getCurrentPressedKeys().contains(KeyCode.SPACE)) {
+                    fileName = "Characters/DeadBody.png";
+                    otherIsDead = true;
+                    System.out.println("DEATH HERE (" + otherX + ", " + otherY + ")");
+                    sendDeathToServer(fileName, clientID, otherX, otherY);
+                }
+                System.out.println();
             }
         }
     }

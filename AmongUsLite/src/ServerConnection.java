@@ -27,13 +27,13 @@ public class ServerConnection {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress().getHostAddress());
                 ClientHandler clientHandler;
-                if(i == 0){
+                if(i == 0) {
                     clientHandler = new ClientHandler(clientSocket, true);
                     clients.add(clientHandler);
                     moreThanOnePlayer = false;
                     clients.get(i).sendMessage("IMPOSTOR");
                 }
-                else{
+                else {
                     clientHandler = new ClientHandler(clientSocket, false);
                     clients.add(clientHandler);
                     moreThanOnePlayer = true;
@@ -60,19 +60,18 @@ public class ServerConnection {
         }*/
 
         for (ClientHandler client : clients) {
-            positions.append(client.getId() + "&" + client.getName() + "&x=").append(client.getXPosition()).append("&y=").append(client.getYPosition()).append(";");
-            if (!client.isDead()) {
-
-            }
+            positions.append(client.getId() + "&" + client.getName() + "&x=").append(client.getXPosition()).append("&y=").append(client.getYPosition()).append("&dead=" + client.isDead()).append(";");
         }
 
         String positionsMessage = positions.toString();
         for (ClientHandler client : clients) {
+            System.out.println("Sending message: " + positionsMessage);
+            System.out.println();
             client.sendMessage(positionsMessage);
         }
     }
 
-    private static void broadcastPositionsDeath(String tmpName, int tmpId) {
+    /*private static void broadcastPositionsDeath(String tmpName, int tmpId) {
         StringBuilder positions = new StringBuilder();
         for (ClientHandler client : clients) {
             positions.append(client.getId() + "&" + client.getName() + "&x=").append(client.getXPosition()).append("&y=").append(client.getYPosition()).append("&dead=").append(client.isDead()).append(";");
@@ -82,7 +81,7 @@ public class ServerConnection {
         for (ClientHandler client : clients) {
             client.sendMessage(positionsMessage);
         }
-    }
+    }*/
 
     public static class ClientHandler implements Runnable {
         private final Socket clientSocket;
@@ -120,6 +119,7 @@ public class ServerConnection {
 
                     String receivedMessage = new String(buffer, 0, bytesRead);
                     System.out.println("Received message from client: " + receivedMessage);
+                    System.out.println();
 
                     // Update client's position
                     String[] parts = receivedMessage.split("&");
@@ -130,19 +130,9 @@ public class ServerConnection {
                         yPosition = Double.parseDouble(parts[2].substring(2));
                         isDead = Boolean.parseBoolean(parts[3].substring(5));
                         if (requestKill && !isImpostor) {
-                            System.out.println("requestkill");
+                            System.out.println("REQUESTKILL: " + Double.parseDouble(parts[4].substring(5)));
                             isDead = true;
                         }
-                        System.out.println("before dead body check");
-                        DeadBody none = new DeadBody(-999, -999);
-                        deadBodies.put(0, none);
-                        for (Map.Entry<Integer, DeadBody> entry : deadBodies.entrySet()) {
-                            System.out.println("Dead body check");
-                            if (isPlayerInRange(xPosition, yPosition, entry.getValue().getX(), entry.getValue().getY())) {
-                                entry.getValue().addVisiblePlayerIDs(id + 1);
-                            }
-                        }
-                        System.out.println("after dead body check");
 
                         //clientPositions.get(id).updatePosition(xPosition, yPosition);
                     }

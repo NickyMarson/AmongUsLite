@@ -78,12 +78,9 @@ public class Player {
         characterDisplay.setFitHeight(systemDimension.getCharacterHeight());
         playerPosition = new Position(-25,200);
         addToPane(base);
-
     }
 
-    public void addToPane(StackPane base){
-        base.getChildren().add(characterDisplay);
-    }
+    public void addToPane(StackPane base) { base.getChildren().add(characterDisplay); }
 
     public ImageView getCharacterDisplay() {
         return characterDisplay;
