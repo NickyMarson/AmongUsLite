@@ -25,28 +25,6 @@ public class Player {
         isDead = dead;
     }
 
-    public void handleMovement(KeyCode keyCode) {
-       if (isDead) {
-           return;
-       }
-
-       switch (keyCode) {
-           case UP:
-               characterDisplay.setTranslateY(characterDisplay.getTranslateY() - 10);
-               break;
-           case DOWN:
-               playerPosition.updateYCoordinate(playerPosition.getYCoordinate() + 10);
-               break;
-           case LEFT:
-               playerPosition.updateXCoordinate(playerPosition.getXCoordinate() - 10);
-               break;
-           case RIGHT:
-               playerPosition.updateXCoordinate(playerPosition.getXCoordinate() + 10);
-               break;
-       }
-    }
-
-
     public void chooseColor(){
         Random random = new Random();
         int randomNumber = random.nextInt(10);
@@ -105,11 +83,11 @@ public class Player {
         characterDisplay.setTranslateY(y);
     }
 
-    public void getPosition(){
+    public void getPlayerPosition(){
         System.out.println(playerPosition.getXCoordinate() + " " + playerPosition.getYCoordinate());
     }
-    public double getXPosition() { return playerPosition.getXCoordinate(); }
-    public double getYPosition() { return playerPosition.getYCoordinate(); }
+    public double getPlayerX() { return playerPosition.getXCoordinate(); }
+    public double getPlayerY() { return playerPosition.getYCoordinate(); }
 
     public String getNameOfFile() {
         return nameOfFile;

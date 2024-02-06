@@ -162,20 +162,8 @@ public class ServerConnection {
             }
         }
 
-        private boolean isPlayerInRange(double playerX, double playerY, double deadBodyX, double deadBodyY) {
-            double distance = Math.sqrt(Math.pow(playerX - deadBodyX, 2) + Math.pow(playerY - deadBodyY, 2));
-            System.out.println("DISTANCE + " + distance);
-            return distance <= 210;
-        }
-
         public boolean isDead() {
             return isDead;
-        }
-
-        public void killHandle(String fileName, int clientID) {
-            ClientHandler killedCrewmate = clients.get(clientID);
-            killedCrewmate.isDead = true;
-            broadcastPositions();
         }
 
         public void sendMessage(String message) {

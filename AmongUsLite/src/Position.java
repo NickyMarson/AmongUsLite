@@ -16,8 +16,8 @@ public class Position {
     }
 
     public void updatePosition(double xCoordinate, double yCoordinate){
-        updateXCoordinate(xCoordinate);
-        updateYCoordinate(yCoordinate);
+        this.xCoordinate = xCoordinate;
+        this.yCoordinate = yCoordinate;
     }
 
     public double getXCoordinate() {

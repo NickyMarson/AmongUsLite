@@ -74,7 +74,7 @@ public class Movement {
     }
 
     public boolean arrowKey(KeyCode tmpKeyCode) {
-        return (tmpKeyCode == KeyCode.UP || tmpKeyCode == KeyCode.DOWN || tmpKeyCode == KeyCode.LEFT || tmpKeyCode == KeyCode.RIGHT);
+        return (tmpKeyCode == KeyCode.UP || tmpKeyCode == KeyCode.DOWN || tmpKeyCode == KeyCode.LEFT || tmpKeyCode == KeyCode.RIGHT || tmpKeyCode == KeyCode.SPACE);
     }
 
     public void checkKeyDirections(Set<KeyCode> currentPressedKeys) {
@@ -104,10 +104,11 @@ public class Movement {
         deltaX = 0;
         deltaY = 0;
 
-        if(numberOfKeysPressed() == 2) {
+        if(numberOfKeysPressed() == 2 && !(currentPressedKeys.contains(KeyCode.SPACE))) {
             checkKeyDirections(currentPressedKeys);
         }
-        if(numberOfKeysPressed() == 1) {
+
+        if(numberOfKeysPressed() == 1 && !(currentPressedKeys.contains(KeyCode.SPACE))) {
             if(currentPressedKeys.contains(KeyCode.UP)){
                 deltaY = -2;
             }

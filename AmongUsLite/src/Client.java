@@ -95,6 +95,8 @@ public class Client extends Application {
 
     private void handleKeyPress(KeyCode keyCode, ImageView imageView, String nameOfFile) {
         if(movement.arrowKey(keyCode)) {
+            System.out.println("Key Pressed: " + keyCode);
+            System.out.println();
             movement.setCurrentPressedKeys(keyCode);
             movement.updateDelta();
             imageView.setTranslateX(movement.getX());
@@ -149,7 +151,7 @@ public class Client extends Application {
             // Send x and y positions as parameters
             String parameters = nameOfFile + "&x=" + x + "&y=" + y + "&dead=" + isDead + "&kill=" + requestKill;
             byte[] messageBytes = parameters.getBytes();
-            System.out.println("messageBytes: " + messageBytes);
+            System.out.println("messageBytes sent to server: " + messageBytes);
             outputStream.write(messageBytes);
             outputStream.flush();
             requestKill = false;
@@ -201,8 +203,21 @@ public class Client extends Application {
             String[] parts = client.split("&");
             int clientID = Integer.parseInt(parts[0]);
             String fileName = parts[1];
+            double checkX = 99999;
+            double checkY = 99999;
             double otherX = Double.parseDouble(parts[2].substring(2));
             double otherY = Double.parseDouble(parts[3].substring(2));
+            if (clientID != 0) {
+                checkX = Double.parseDouble(parts[2].substring(2));
+                checkY = Double.parseDouble(parts[3].substring(2));
+            }
+            /*if (clientID != 0) {
+                otherX = Double.parseDouble(parts[2].substring(2));
+                otherY = Double.parseDouble(parts[3].substring(2));
+            }*/
+            // Could use above if statement for hiding players
+
+
             boolean otherIsDead = false;
             double deadBodyX = 0;
             double deadBodyY = 0;
@@ -213,6 +228,19 @@ public class Client extends Application {
 //                    deadBodyX = Double.parseDouble(parts[5].substring(11));
 //                    deadBodyY = Double.parseDouble(parts[6].substring(11));
 //                }
+            }
+
+            if(playerType.equals("IMPOSTOR") && !isDead) {
+                System.out.println();
+                System.out.println("isDead check");
+                System.out.println("xPosition = " + xPosition + " yPosition = " + yPosition);
+                if(player.ableToKill(checkX, checkY) && movement.getCurrentPressedKeys().contains(KeyCode.SPACE)) {
+                    fileName = "Characters/DeadBody.png";
+                    otherIsDead = true;
+                    System.out.println("DEATH HERE (" + otherX + ", " + otherY + ")");
+                    sendDeathToServer(fileName, clientID, otherX, otherY);
+                }
+                System.out.println();
             }
 
             // Checks if another user is dead, if so it checks if there is a dead body for the given user, if not creates one
@@ -270,19 +298,6 @@ public class Client extends Application {
                     sendDeathToServer(fileName, clientID, otherX, otherY);
                 }
             }*/
-
-            if(playerType.equals("IMPOSTOR") && !isDead) {
-                System.out.println();
-                System.out.println("isDead check");
-                System.out.println("xPosition = " + xPosition + " yPosition = " + yPosition);
-                if(player.ableToKill(xPosition, yPosition) && movement.getCurrentPressedKeys().contains(KeyCode.SPACE)) {
-                    fileName = "Characters/DeadBody.png";
-                    otherIsDead = true;
-                    System.out.println("DEATH HERE (" + otherX + ", " + otherY + ")");
-                    sendDeathToServer(fileName, clientID, otherX, otherY);
-                }
-                System.out.println();
-            }
         }
     }
 
